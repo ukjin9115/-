@@ -146,10 +146,12 @@
 							var detailInfo = response.poiDetailInfo;
 							var name = detailInfo.name;
 							var address = detailInfo.address;
-							console.log("Sending name to React Native:", name);  // 데이터 로깅 추가
 							
-							window.ReactNativeWebView.postMessage(`navigateHome;${name}`);
-							console.log(name);
+							// console.log(name);
+              // // localStorage에 저장된 이름을 삭제
+              // localStorage.removeItem('selectedPoiName');
+							 // localStorage에 이름 저장
+							localStorage.setItem('selectedPoiName', name);
 							
 						
 							
@@ -189,6 +191,8 @@
 							// 변환된 WGS84 좌표 출력
 							console.log("WGS84 좌표계에서의 위치: lat = " + lat + ", lng = " + lon);
 							console.log(name);
+							window.ReactNativeWebView.postMessage('navigateHome');
+
 							
 
 

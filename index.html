@@ -7,16 +7,18 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   <script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=QqEZijDmJy59ldCOxKysV703RidtIuS8ahQxpctS"></script>
   <script>
-    // onMessage 이벤트 핸들러
-    window.addEventListener("message", receiveMessage, false);
+    // index.html 로드 시 실행되는 함수
 
-    function receiveMessage(event) {
-        // 받은 메시지가 이름인 경우
-        if (event.nativeEvent.data && event.nativeEvent.data !== "") {
-            // 받은 이름을 cof div에 넣어주기
-            document.querySelector('#bt1').innerText = event.nativeEvent.data;
+    
+    document.addEventListener("visibilitychange", function() {
+    if (!document.hidden) {
+        var selectedPoiName = localStorage.getItem('selectedPoiName');
+        if (selectedPoiName) {
+            document.getElementById('bt1').innerText = selectedPoiName;
         }
     }
+});
+   
 </script>
 
   <title>Capston3</title>
@@ -35,8 +37,8 @@
     <div class="homeScreen" style="position: absolute; top: 0; left: 0;">
       <img src="/images/home.png">
       <div id="map_div" style="position: absolute; top: 279px; left: 19px;"></div>
-      <button id='bt1' onclick="sendMessage('navigatePoitest')" style="position: absolute; width: 336px; height: 44px; top: 114px; left: 38px; opacity: 0.5;">Start </button>
-      <button id='bt2' onclick="switchToOtherScreen('poitest')" style="position: absolute; width: 336px; height: 44px; top: 164px; left: 38px; opacity: 0.5;">Finish Screen</button>
+      <button id='bt1' onclick="switchToOtherScreen('navigatePoitest')" style="position: absolute; width: 336px; height: 44px; top: 114px; left: 38px; opacity: 1;">출발지 입력 </button>
+      <button id='bt2' onclick="switchToOtherScreen('navigatePoitest')" style="position: absolute; width: 336px; height: 44px; top: 164px; left: 38px; opacity: 0.5;">도착지 입력</button>
       <button id='bt3' onclick="switchToOtherScreen('login')" style="position: absolute; left: 306px; top:49px; opacity: 0.5;">login </button>
       <button id='bt5' onclick="switchToOtherScreen('menu')" style="position: absolute; width: 30px; height: 30px; top:49px; left: 346px; opacity: 0.5;">login </button>
       <button id='bt6' onclick="switchToOtherScreen('cost')" style="position: absolute; width: 164px; height: 44px; top:215px; left: 38px; opacity: 0.5;">login </button>
@@ -72,9 +74,7 @@
     function switchToOtherScreen(Screen) {
     window.ReactNativeWebView.postMessage(Screen);
   }
-  function sendMessage(message) {
-  window.ReactNativeWebView.postMessage(message);
-}
+  
 
   </script>
 </body>

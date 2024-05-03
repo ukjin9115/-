@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; // useState를 React에서 가져옵니다
+import React, { useState , useEffect } from 'react'; // useState를 React에서 가져옵니다
 import { WebView } from 'react-native-webview';
 import { View, Text } from 'react-native';
 
@@ -18,6 +18,7 @@ function WebViewScreen({ route, navigation }) {
       navigation.navigate('Poitest'); // 다른 화면으로 이동
     }
   };
+  
 
   return (
     <View style={{ flex: 1 }}>
