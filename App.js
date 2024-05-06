@@ -19,6 +19,11 @@ export default function App() {
           component={WebViewScreen}
           initialParams={{ uri: require('./poitest.html') }}  // 로컬 HTML 파일을 WebView에 로드합니다.
         />
+        <Stack.Screen
+          name="Poitest2"
+          component={WebViewScreen}
+          initialParams={{ uri: require('./poitest2.html') }}  // 로컬 HTML 파일을 WebView에 로드합니다.
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

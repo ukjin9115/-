@@ -16,9 +16,11 @@ function WebViewScreen({ route, navigation }) {
        // 홈으로 이동하면서 데이터 전달
     } else if (message === 'navigatePoitest') {
       navigation.navigate('Poitest'); // 다른 화면으로 이동
+    } else if (message === 'navigatePoitest2'){
+      navigation.navigate('Poitest2');
     }
   };
-  
+  /* */
 
   return (
     <View style={{ flex: 1 }}>
