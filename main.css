@@ -1,0 +1,80 @@
+
+  body{
+    width: 393px; height: 852px; margin: 0; padding: 0;
+  }
+  .inputBox{
+    height: 70px;
+  }
+  
+  #btn_select{
+    background-color: aliceblue;
+  }
+  .resultBox{
+    margin-left: 5%;
+    height: 270px;
+    /* background-color: aquamarine; */
+    overflow-y: auto; /* 세로 스크롤바 활성화 */
+    box-shadow: 0px 9px 30px rgba(143, 220, 140, 0.4);
+    border-radius: 5px;
+    
+  }
+  .text_custom{
+    width: 280px;
+    height: 40px;
+    margin-top: 10px;
+    border-radius: 8px;
+  }
+
+  .map_div{
+    margin-top: 30px;
+  }
+
+
+
+
+/* CSS */
+.sendBtn{
+  appearance: none;
+  backface-visibility: hidden;
+  background-color: #27ae60;
+  border-radius: 8px;
+  border-style: none;
+  box-shadow: rgba(39, 174, 96, .15) 0 4px 9px;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Inter,-apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: normal;
+  line-height: 1.5;
+  outline: none;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transform: translate3d(0, 0, 0);
+  transition: all .3s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.sendBtn{
+  background-color: #1e8449;
+  opacity: 1;
+  transform: translateY(0);
+  transition-duration: .35s;
+}
+
+.sendBtn{
+  transform: translateY(2px);
+  transition-duration: .35s;
+}
+
+.sendBtn{
+  box-shadow: rgba(39, 174, 96, .2) 0 6px 12px;
+}

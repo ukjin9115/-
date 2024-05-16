@@ -2,19 +2,23 @@
 	<html>
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<title>simpleMap</title>
+			<link href="/main.css" rel="stylesheet">
 			<script	src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 			<script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=QqEZijDmJy59ldCOxKysV703RidtIuS8ahQxpctS"></script>
 			<script type="text/javascript">
 				var map, marker;
 				var markerArr = [], labelArr = [];
-				W
+				
 				function initTmap() {
 					// 1. 지도 띄우기
 					map = new Tmapv2.Map("map_div", {
 						center : new Tmapv2.LatLng(37.56520450, 126.98702028),
-						width : "70%",
-						height : "400px",
+						width : "393px",
+						height : "461px",
 						zoom : 17,
 						zoomControl : true,
 						scrollwheel : true
@@ -191,9 +195,9 @@
 							// 변환된 WGS84 좌표 출력
 							console.log("WGS84 좌표계에서의 위치: lat = " + lat + ", lng = " + lon);
 							console.log(name);
-							window.ReactNativeWebView.postMessage('navigateHome');
+							// window.ReactNativeWebView.postMessage('navigateHome');
 
-							
+							sendCoordinatesToFlask(lat, lon);
 
 
 					},
@@ -207,27 +211,43 @@
 	function switchToOtherScreen(Screen) {
 			window.ReactNativeWebView.postMessage(Screen);
 				}
-
+				function sendCoordinatesToFlask(latitude, longitude) {
+    // 위도와 경도를 Flask 서버로 전송
+    fetch('http://172.20.10.2:5000/coordinates', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            latitude: latitude,
+            longitude: longitude
+        }),
+    })
+    .then(response => response.json())
+    .then(data => console.log("Coordinates sent successfully: " + JSON.stringify(data)))
+    .catch(error => console.error("Failed to send coordinates: " + error));
+}
 
 	</script>
 	<body onload="initTmap();">
 
-		<div>
-			<input type="text" class="text_custom" id="searchKeyword" name="searchKeyword" value="서울시">	
-			<button id="btn_select">적용하기</button>
-		</div>
-		<div>
-			<div style="width: 30%; float:left;">
-				<div class="title"><strong>Search</strong> Results</div>
+		<div class="viewPort" style="position: relative; height: 100%; width: 100%;">
+			<div class="inputBox">    
+				<input type="text" class="text_custom" id="searchKeyword" name="searchKeyword" placeholder="어디로 갈까요?">  
+				<button class="btn btn-outline-secondary" type="button"id="btn_select">검색하기</button>
+			</div>
+			
+			<div class='resultBox'style="width: 90%; float: left;">
+				<div class="title" style="text-align: center;"><strong>Search</strong> Results</div>
 				<div class="rst_wrap">
-					<div class="rst mCustomScrollbar">
+					<div class="rst_mCustomScrollbar">
 						<ul id="searchResult" name="searchResult">
 							<li>검색결과</li>
 						</ul>
 					</div>
 				</div>
 			</div>
-			<div id="map_div" class="map_wrap" style="float:left"></div>
-		</div>
+			<div id="map_div" style="float: left; margin-top: 30px;"></div>
+	 </div>
 	</body>
 	</html>
