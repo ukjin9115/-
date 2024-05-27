@@ -8,29 +8,56 @@
   <script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=QqEZijDmJy59ldCOxKysV703RidtIuS8ahQxpctS"></script>
     
   <script>
-    // index.html 로드 시 실행되는 함수
-
-    
     document.addEventListener("visibilitychange", function() {
-    if (!document.hidden) {
-        var selectedPoiName = localStorage.getItem('selectedPoiName');
+      if (!document.hidden) {
+          var selectedPoiName = localStorage.getItem('selectedPoiName');
+          if (selectedPoiName) {
+              document.getElementById('bt1').innerText = selectedPoiName;
+          }
+          var selectedPoiName2 = localStorage.getItem('selectedPoiName2');
+          if (selectedPoiName2) {
+              document.getElementById('bt2').innerText = selectedPoiName2;
+          }
+      }
+    });
 
-        if (selectedPoiName) {
-            document.getElementById('bt1').innerText = selectedPoiName;
-        }
+    function switchToOtherScreen(screen) {
+      window.ReactNativeWebView.postMessage(screen);
     }
-});
-document.addEventListener("visibilitychange", function() {
-    if (!document.hidden) {
-        var selectedPoiName2 = localStorage.getItem('selectedPoiName2');
+//http://192.168.40.119:7877/timeroute 형률이꺼
+//http://172.20.10.2:5000/coordinates 내서버
+    function sendCoordinatesToFlask(latitude1, longitude1,latitude2, longitude2) {
+      fetch('http://172.20.10.2:7877/timeroute', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              sp_lat: latitude1,
+              sp_long: longitude1,
+              ep_lat: latitude2,
+              ep_long: longitude2
+          }),
+      })
+      .then(response => response.json())
+      .then(data => console.log("Coordinates sent successfully: " + JSON.stringify(data)))
+      .catch(error => console.error("Failed to send coordinates: " + error));
+    }
 
-        if (selectedPoiName2) {
-            document.getElementById('bt2').innerText = selectedPoiName2;
-        }
+    function sendAllCoordinates() {
+      var startCoordinates = JSON.parse(localStorage.getItem('startCoordinates'));
+      var endCoordinates = JSON.parse(localStorage.getItem('endCoordinates'));
+
+      console.log('Start Coordinates:', startCoordinates);
+      console.log('End Coordinates:', endCoordinates);
+      
+      
+      sendCoordinatesToFlask(startCoordinates.latitude, startCoordinates.longitude, endCoordinates.latitude, endCoordinates.longitude);
+      
+
+      switchToOtherScreen('navigationtest');
     }
-});
-   
-</script>
+  </script>
 
   <title>Capston3</title>
   <style>
@@ -38,13 +65,11 @@ document.addEventListener("visibilitychange", function() {
         width: 30px;
         height: 30px;
         font-size: 8px;
-        
     }
-    
-    </style>
+  </style>
 </head>
 <body style="width: 393px; height: 852px; margin: 0; padding: 0;">
-  <div class="viewPort" style=" height: 100%; width: 100%;">
+  <div class="viewPort" style="height: 100%; width: 100%;">
     <div class="homeScreen" style="position: absolute; top: 0; left: 0;">
       <img src="/images/home.png">
       <div id="map_div" style="position: absolute; top: 279px; left: 19px;"></div>
@@ -53,8 +78,7 @@ document.addEventListener("visibilitychange", function() {
       <button id='bt3' onclick="switchToOtherScreen('login')" style="position: absolute; left: 306px; top:49px; opacity: 0;">login </button>
       <button id='bt5' onclick="switchToOtherScreen('menu')" style="position: absolute; width: 30px; height: 30px; top:49px; left: 346px; opacity: 0;">login </button>
       <button id='bt6' onclick="switchToOtherScreen('cost')" style="position: absolute; width: 164px; height: 44px; top:215px; left: 38px; opacity: 0;">비용아끼기 </button>
-      <button id='bt7' onclick="switchToOtherScreen('time')" style="position: absolute; width: 164px; height: 44px; top:215px; left: 209px; opacity: 0;">시간아끼기 </button>
-            
+      <button id='bt7' onclick="sendAllCoordinates()" style="position: absolute; width: 164px; height: 44px; top:215px; left: 209px; opacity: 0;">시간아끼기 </button>
     </div>
   </div>                                               
 
@@ -63,28 +87,20 @@ document.addEventListener("visibilitychange", function() {
       initTmap();
     });
 
-    function initTmap(){
-      var map = new Tmapv2.Map("map_div",  
-      {
-        center: new Tmapv2.LatLng(33.499853,126.531294), // 지도 초기 좌표
-        width: "355px", 
+    function initTmap() {
+      var map = new Tmapv2.Map("map_div", {
+        center: new Tmapv2.LatLng(33.499853, 126.531294),
+        width: "355px",
         height: "461px",
-        
         zoom: 17,
-        zoomControl : true,
-        scrollwheel : true  
+        zoomControl: true,
+        scrollwheel: true  
       });
       var marker = new Tmapv2.Marker({
-		  position: new Tmapv2.LatLng(33.499853,126.531294),
-		  map: map
-      
-	});	
-  }
-    function switchToOtherScreen(Screen) {
-    window.ReactNativeWebView.postMessage(Screen);
-  }
-  /**/
-
+        position: new Tmapv2.LatLng(33.499853, 126.531294),
+        map: map
+      });
+    }
   </script>
 </body>
 </html>

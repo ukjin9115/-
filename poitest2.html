@@ -196,8 +196,8 @@ function poiDetail(poiId , name) {
 						console.log("WGS84 좌표계에서의 위치: lat = " + lat + ", lng = " + lon);
 						console.log(name);
 						// window.ReactNativeWebView.postMessage('navigateHome');
-
-						sendCoordinatesToFlask(lat, lon);
+						localStorage.setItem('endCoordinates', JSON.stringify({ latitude: lat, longitude: lon }));
+						//sendCoordinatesToFlask(lat, lon,'end');
 
 
 				},
@@ -211,22 +211,24 @@ function poiDetail(poiId , name) {
 function switchToOtherScreen(Screen) {
 		window.ReactNativeWebView.postMessage(Screen);
 			}
-			function sendCoordinatesToFlask(latitude, longitude) {
-	// 위도와 경도를 Flask 서버로 전송
-	fetch('http://172.20.10.2:5000/coordinates', {
-			method: 'POST',
-			headers: {
-					'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-					latitude: latitude,
-					longitude: longitude
-			}),
-	})
-	.then(response => response.json())
-	.then(data => console.log("Coordinates sent successfully: " + JSON.stringify(data)))
-	.catch(error => console.error("Failed to send coordinates: " + error));
-}
+// 			function sendCoordinatesToFlask(latitude, longitude, type) {
+// 	// 위도와 경도를 Flask 서버로 전송
+// 	fetch('http://172.20.10.2:5000/coordinates', {
+// 			method: 'POST',
+// 			headers: {
+// 					'Content-Type': 'application/json',
+// 			},
+// 			body: JSON.stringify({
+// 					latitude: latitude,
+// 					longitude: longitude,
+// 					type: type
+
+// 			}),
+// 	})
+// 	.then(response => response.json())
+// 	.then(data => console.log("Coordinates sent successfully: " + JSON.stringify(data)))
+// 	.catch(error => console.error("Failed to send coordinates: " + error));
+// }
 
 </script>
 <body onload="initTmap();">

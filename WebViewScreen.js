@@ -57,6 +57,12 @@ function WebViewScreen({ route, navigation }) {
       case 'user':
         navigation.navigate('user');
         break;
+      case 'navigationtest':
+        navigation.navigate('navigationtest');
+        break;
+      case 'cost':
+        navigation.navigate('cost');
+        break;
       default:
         setDebugMessage("Unhandled message: " + message);
     }
