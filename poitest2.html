@@ -197,7 +197,7 @@ function poiDetail(poiId , name) {
 						console.log(name);
 						// window.ReactNativeWebView.postMessage('navigateHome');
 						localStorage.setItem('endCoordinates', JSON.stringify({ latitude: lat, longitude: lon }));
-						//sendCoordinatesToFlask(lat, lon,'end');
+						sendCoordinatesToFlask(lat, lon,name,'end');
 
 
 				},
@@ -211,24 +211,25 @@ function poiDetail(poiId , name) {
 function switchToOtherScreen(Screen) {
 		window.ReactNativeWebView.postMessage(Screen);
 			}
-// 			function sendCoordinatesToFlask(latitude, longitude, type) {
-// 	// 위도와 경도를 Flask 서버로 전송
-// 	fetch('http://172.20.10.2:5000/coordinates', {
-// 			method: 'POST',
-// 			headers: {
-// 					'Content-Type': 'application/json',
-// 			},
-// 			body: JSON.stringify({
-// 					latitude: latitude,
-// 					longitude: longitude,
-// 					type: type
+			function sendCoordinatesToFlask(latitude, longitude,name, type) {
+	// 위도와 경도를 Flask 서버로 전송
+	fetch('http://172.20.10.2:5000/coordinates', {
+			method: 'POST',
+			headers: {
+					'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+					latitude: latitude,
+					longitude: longitude,
+					type: type,
+					name: name
 
-// 			}),
-// 	})
-// 	.then(response => response.json())
-// 	.then(data => console.log("Coordinates sent successfully: " + JSON.stringify(data)))
-// 	.catch(error => console.error("Failed to send coordinates: " + error));
-// }
+			}),
+	})
+	.then(response => response.json())
+	.then(data => console.log("Coordinates sent successfully: " + JSON.stringify(data)))
+	.catch(error => console.error("Failed to send coordinates: " + error));
+}
 
 </script>
 <body onload="initTmap();">
@@ -239,7 +240,7 @@ function switchToOtherScreen(Screen) {
 			<button class="btn btn-outline-secondary" type="button"id="btn_select">검색하기</button>
 		</div>
 		
-		<div class='resultBox'style="width: 90%; float: left;">
+		<div class='resultBox'style="width: 90%; float: left; box-shadow: 0px 9px 30px rgba(229, 140, 140, 0.4);">
 			<div class="title" style="text-align: center;"><strong>Search</strong> Results</div>
 			<div class="rst_wrap">
 				<div class="rst_mCustomScrollbar">

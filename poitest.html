@@ -198,7 +198,7 @@
 							// window.ReactNativeWebView.postMessage('navigateHome');
 							localStorage.setItem('startCoordinates', JSON.stringify({ latitude: lat, longitude: lon }));
 							console.log("Start coordinates saved:", { latitude: lat, longitude: lon });
-//sendCoordinatesToFlask(lat, lon,'start');
+              sendCoordinatesToFlask(lat, lon,name,'start');//navigationtest화면으로 전송
               
 
 					},
@@ -212,23 +212,24 @@
 	function switchToOtherScreen(Screen) {
 			window.ReactNativeWebView.postMessage(Screen);
 				}
-// 	function sendCoordinatesToFlask(latitude, longitude, type) {
-//     // 위도와 경도를 Flask 서버로 전송
-//     fetch('http://172.20.10.2:5000/coordinates', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({
-//             latitude: latitude,
-//             longitude: longitude,
-// 						type: type
-//         }),
-//     })
-//     .then(response => response.json())
-//     .then(data => console.log("Coordinates sent successfully: " + JSON.stringify(data)))
-//     .catch(error => console.error("Failed to send coordinates: " + error));
-// }
+	function sendCoordinatesToFlask(latitude, longitude, name,type) {
+    // 위도와 경도를 Flask 서버로 전송
+    fetch('http://172.20.10.2:5000/coordinates', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            latitude: latitude,
+            longitude: longitude,
+						type: type,
+						name: name
+        }),
+    })
+    .then(response => response.json())
+    .then(data => console.log("Coordinates sent successfully: " + JSON.stringify(data)))
+    .catch(error => console.error("Failed to send coordinates: " + error));
+}
 
 	</script>
 	<body onload="initTmap();">

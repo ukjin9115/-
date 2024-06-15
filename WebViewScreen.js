@@ -1,6 +1,7 @@
-import React, { useState } from 'react'; // useEffect 제거, 사용하지 않음
+import React, { useState } from 'react';
 import { WebView } from 'react-native-webview';
-import { View, Text } from 'react-native';
+import { View, Text, Linking } from 'react-native';
+
 function WebViewScreen({ route, navigation }) {
   const { uri } = route.params;
   const [debugMessage, setDebugMessage] = useState('');
@@ -12,6 +13,12 @@ function WebViewScreen({ route, navigation }) {
       // JSON 형태로 파싱 시도
       const message = JSON.parse(messageData);
 
+      // URL 스킴 처리
+      if (message.type === 'urlScheme') {
+        const url = message.url;
+        Linking.openURL(url).catch(err => console.error('Failed to open URL:', err));
+      }
+      
       // JSON 형태의 메시지 처리 (좌표 데이터)
       if (message.latitude && message.longitude) {
         // 좌표 데이터를 Flask 서버로 전송하는 로직을 추가합니다.

@@ -24,10 +24,11 @@
     function switchToOtherScreen(screen) {
       window.ReactNativeWebView.postMessage(screen);
     }
+    //형률이 핫스팟에 연결했을때는 http://172.20.10.2:7877/timeroute
 //http://192.168.40.119:7877/timeroute 형률이꺼
 //http://172.20.10.2:5000/coordinates 내서버
     function sendCoordinatesToFlask(latitude1, longitude1,latitude2, longitude2) {
-      fetch('http://172.20.10.2:7877/timeroute', {
+      fetch('http://119.207.34.121:7877/timeroute', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -40,7 +41,12 @@
           }),
       })
       .then(response => response.json())
-      .then(data => console.log("Coordinates sent successfully: " + JSON.stringify(data)))
+      .then(data => {
+    localStorage.setItem('oilLat', data["result"][1]);
+    localStorage.setItem('oilLon', data["result"][2]);
+    localStorage.setItem('oilName',data["result"][0]);
+})
+      
       .catch(error => console.error("Failed to send coordinates: " + error));
     }
 
