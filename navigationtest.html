@@ -87,8 +87,12 @@
               });
               //tmap
                 document.getElementById('tMap').addEventListener('click', function() {
-                console.log(startX,startY);
-                console.log(oilLat,oilLon);
+                  var endCoordinates = JSON.parse(localStorage.getItem('endCoordinates'));
+                  var oilLon = parseFloat(localStorage.getItem('oilLon'));
+                  console.log(oilLon);
+                  var oilLat = parseFloat(localStorage.getItem('oilLat'));
+                  console.log(oilLat);
+    
 
                 var tMapUrl = `tmap://route?goaly=${endY}&goalx=${endX}&via1y=${oilLat}&via1x=${oilLon}`
                 window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'urlScheme', url: tMapUrl }));
@@ -96,6 +100,12 @@
               }); 
               //navermap
               document.getElementById('naverMap').addEventListener('click',function(){
+                var endCoordinates = JSON.parse(localStorage.getItem('endCoordinates'));
+                var oilLon = parseFloat(localStorage.getItem('oilLon'));
+                console.log(oilLon);
+                var oilLat = parseFloat(localStorage.getItem('oilLat'));
+                console.log(oilLat);
+    
                   var naverMapUrl = `nmap://route/car?slat=${startY}&slng=${startX}&dlng=${endX}&dlat=${endY}&v1lng=${oilLon}&v1lat=${oilLat}&&appname=com.example.myapp`
                   window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'urlScheme', url: naverMapUrl }))
                 })
@@ -161,7 +171,6 @@
       }
       map.fitBounds(PTbounds);
     }
-
     // 시작, 도착 심볼 찍기
     var markerList = [];
     var pointArray = [];
@@ -186,7 +195,6 @@
         icon: imgURL,
         map: map
       });
-
       // 마커 드래그 설정
       marker.tag = tag;
       marker.addListener("dragend", function (evt) {
@@ -198,7 +206,6 @@
       markerList[tag] = marker;
       return marker;
     }
-
     // 경로탐색 API 사용요청
     function routeSearch() {
       var headers = {};
@@ -241,7 +248,6 @@
     });
   </script>
   <script>
-
 function startNavigation() {
     var endCoordinates = JSON.parse(localStorage.getItem('endCoordinates'));
     var oilLon = parseFloat(localStorage.getItem('oilLon'));
@@ -261,8 +267,6 @@ function startNavigation() {
         }]
     });
 }
-
-
     </script>
     
 

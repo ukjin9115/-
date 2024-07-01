@@ -70,6 +70,12 @@ function WebViewScreen({ route, navigation }) {
       case 'cost':
         navigation.navigate('cost');
         break;
+      case 'userinfo':
+          navigation.navigate('userinfo');
+          break;
+      case 'allview':
+          navigation.navigate('allview');
+          break;
       default:
         setDebugMessage("Unhandled message: " + message);
     }

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/main.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
@@ -11,43 +12,135 @@
     <div class="loginScreen" style="position: absolute; top: 0; left: 0;">
       <img src="/images/cost.png" style="width: 393px; height: 800px; float: left;">
       <div style="position: absolute;">
-        
+        <!-- 연비 입력란. 입력안하면 default값 전송하고 입력한값 전송 -->
+        <input type="text" id="eff" style="position: absolute; top:165px; left:60px; width:130px; height: 65px; " placeholder="설정연비:10KM/L">
+        <!-- 드롭다운버튼/유종선택 -->
+        <div class="dropdown" style="position: absolute; top:165px; left:210px; width:130px; height: 65px;">
+          <button class="dropbtn" id="dropdownButton" style="font-size: 20px;">유종 선택</button>
+          <div class="dropdown-content">
+              <a href="#" class="dropdown-item">휘발유</a>
+              <a href="#" class="dropdown-item">경유</a>
+              <a href="#" class="dropdown-item">고급휘발유</a>
+              <a href="#" class="dropdown-item">실내등유</a>
+              <a href="#" class="dropdown-item">가스</a>
+          </div>
+        </div>
+        <!-- 몇L주유할거임?-->
         <input type="text" id="liter" style="position: relative; top:300px; left:60px; width:270px; height: 65px; " placeholder="L">
         <button id="calculate" style="position: absolute; top:405px; left:236px; width:118px; height: 42px;" >버튼</button>
+        <!-- 얼마치 주유할거임?-->
         <input type="text" id="cash" style="position: relative; top:465px; left:60px; width:270px; height: 65px; "placeholder="원">
         <button id="calculate2" style="position: absolute; top:640px; left:236px; width:118px; height: 42px;" >버튼2</button>
       </div>
     </div>
   </div>
   <script>
-      function switchToOtherScreen(Screen) {
-      window.ReactNativeWebView.postMessage(Screen);
+    function switchToOtherScreen(screen) {
+      window.ReactNativeWebView.postMessage(screen);
     }
 
-    $('#calculate').on('click', function() {
-      sendDataToFlask('#liter', 'L');
+    // function sendCoordinatesToFlask(latitude1, longitude1, latitude2, longitude2) {
+    //   fetch('http://119.207.34.121:7877/priceroute', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       sp_lat: latitude1,
+    //       sp_long: longitude1,
+    //       ep_lat: latitude2,
+    //       ep_long: longitude2,
+    //     }),
+    //   })
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     localStorage.setItem('oilLat', data["result"][1]);
+    //     localStorage.setItem('oilLon', data["result"][2]);
+    //     localStorage.setItem('oilName', data["result"][0]);
+    //   })
+    //   .catch(error => console.error("Failed to send coordinates: " + error));
+    // }
+    // function sendAllCoordinates() {
+    //   var startCoordinates = JSON.parse(localStorage.getItem('startCoordinates'));
+    //   var endCoordinates = JSON.parse(localStorage.getItem('endCoordinates'));
+    //   console.log('Start Coordinates:', startCoordinates);
+    //   console.log('End Coordinates:', endCoordinates);  
+    //   sendCoordinatesToFlask(startCoordinates.latitude, startCoordinates.longitude, endCoordinates.latitude, endCoordinates.longitude); 
+    // }
+    // 유종 선택 드롭다운. 선택하면 텍스트 변환
+    $('.dropdown-item').on('click', function(event) { 
+      event.preventDefault();
+      let selectedText = $(this).text();
+      $('#dropdownButton').text(selectedText);
+      localStorage.setItem('oilType', selectedText);
     });
-
-    $('#calculate2').on('click', function() {
-      sendDataToFlask('#cash', '원');
-    });
-
-    function sendDataToFlask(selector, unit) {
+    // 서버로 전송 함수, input에 넣은 값을 바탕으로 json으로 변경
+    function sendDataToFlask(selector, unit ,oilType) {
+      var startCoordinates = JSON.parse(localStorage.getItem('startCoordinates'));
+      var endCoordinates = JSON.parse(localStorage.getItem('endCoordinates'));
       var value = $(selector).val();
-      var data = value + unit;
+      var efficiency = $('#eff').val();
+      if(unit=='L'){
+        var data = {
+        sp_lat: startCoordinates.latitude,
+        sp_long: startCoordinates.longitude,
+        ep_lat: endCoordinates.latitude,
+        ep_long: endCoordinates.longitude,
+        wantL: value,  
+        fuel_efficiency: efficiency, 
+        oiltype: oilType,
+      };
+    }else{
+        var data = {
+        sp_lat: startCoordinates.latitude,
+        sp_long: startCoordinates.longitude,
+        ep_lat: endCoordinates.latitude,
+        ep_long: endCoordinates.longitude,
+        wantPrice: value,
+        fuel_efficiency: efficiency, 
+        oiltype: oilType,
+      };
+    };
       $.ajax({
-        url: 'http://172.20.10.2:5000/data',  // Flask 서버 URL
+        url: 'http://218.149.172.241:7877/priceroute',  // Flask 서버 URL
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({ value: data }),
+        data: JSON.stringify(data),
         success: function(response) {
           console.log("Data sent successfully: " + response);
+          localStorage.setItem('oilLat', response["result"][1]);
+          localStorage.setItem('oilLon', response["result"][2]);
+          localStorage.setItem('oilName', response["result"][0]);
         },
         error: function(error) {
           console.error("Error sending data: " + error);
-        }
+        },
       });
     }
+    $('#calculate').on('click', function() {
+      if ($('#dropdownButton').text() === '유종 선택') {
+        alert('유종을 선택하세요.');
+      } else if ($('#eff').val() === '') {
+        alert('연비를 입력하세요.');
+      } else {
+        let oilType = localStorage.getItem('oilType');
+        // sendAllCoordinates();  // Pass an empty string or appropriate screen value
+        sendDataToFlask('#liter', 'L', oilType);
+        switchToOtherScreen('navigationtest');
+      }
+    });
+    $('#calculate2').on('click', function() {
+      if ($('#dropdownButton').text() === '유종 선택') {
+        alert('유종을 선택하세요.');
+      } else if ($('#eff').val() === '') {
+        alert('연비를 입력하세요.');
+      } else {
+        let oilType = localStorage.getItem('oilType');
+        // sendAllCoordinates();  // Pass an empty string or appropriate screen value
+        sendDataToFlask('#cash', '원', oilType);
+        switchToOtherScreen('navigationtest');
+      }
+    });
   </script>
 </body>
 </html>

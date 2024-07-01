@@ -13,7 +13,14 @@
   <div class="viewPort" style=" height: 100%; width: 100%;">
     <div class="loginScreen">
       <img src="/images/user.png" style="width: 393px; height: 800px;">
-      
+      <form id="registerForm">
+        <input type="text" id="username" placeholder="Username" class="form-control" style="position:absolute; top:70px; width: 400px; height: 50px;" required>
+        <input type="text" id="userId" placeholder="UserId" class="form-control" style="position:absolute; top:140px; width: 400px; height: 50px;" required>
+        <input type="password" id="password" placeholder="Password" class="form-control" style="position:absolute; top:215px; width: 400px; height: 50px;" required>
+        <input type="password" id="passwordCheck" placeholder="PasswordCheck" class="form-control" style="position:absolute; top: 285px; width: 400px; height: 50px;" required>
+        <input type="text" id="fuel_ef" placeholder="FuelEfficeincy" class="form-control" style="position:absolute; top:355px; width: 400px; height: 50px;" required>
+        <button type="submit" class="btn btn-primary" style="position: absolute; width: 300px; height: 50px; top:470px; left: 50px; background-color: #47AEE9;">Sign Up</button>
+      </form>
     
     </div>
   </div>   
@@ -21,6 +28,38 @@
   function switchToOtherScreen(Screen) {
     window.ReactNativeWebView.postMessage(Screen);
   }
+  //
+
+ document.addEventListener("DOMContentLoaded", function() {
+  document.getElementById("registerForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    
+    const id = document.getElementById("userId").value;
+    const name = document.getElementById("username").value;
+    const pw = document.getElementById("password").value;
+    const pw2 = document.getElementById("passwordCheck").value;
+    const fuel_efficiency = document.getElementById("fuel_ef").value;
+
+    fetch('http://218.149.172.241:7877/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, name, pw, pw2, fuel_efficiency }),
+    })
+    .then(response => response.json())
+    .then(response => {
+      if (response.result === "success") {
+        alert(response.message);
+        switchToOtherScreen('login');
+      }
+      if (response.result === "fail") {
+        alert(response.error);
+      }
+    })
+    .catch(error => console.error("Failed to register: " + error));
+  });
+});
   </script>                                            
 
 </body>

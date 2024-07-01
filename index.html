@@ -28,7 +28,7 @@
 //http://192.168.40.119:7877/timeroute 형률이꺼
 //http://172.20.10.2:5000/coordinates 내서버
     function sendCoordinatesToFlask(latitude1, longitude1,latitude2, longitude2) {
-      fetch('http://119.207.34.121:7877/timeroute', {
+      fetch('http://218.149.172.241:7877//timeroute', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -50,7 +50,20 @@
       .catch(error => console.error("Failed to send coordinates: " + error));
     }
 
-    function sendAllCoordinates() {
+    // function sendAllCoordinates() {
+    //   var startCoordinates = JSON.parse(localStorage.getItem('startCoordinates'));
+    //   var endCoordinates = JSON.parse(localStorage.getItem('endCoordinates'));
+
+    //   console.log('Start Coordinates:', startCoordinates);
+    //   console.log('End Coordinates:', endCoordinates);
+      
+      
+    //   sendCoordinatesToFlask(startCoordinates.latitude, startCoordinates.longitude, endCoordinates.latitude, endCoordinates.longitude);
+      
+
+    //   switchToOtherScreen('navigationtest');
+    // }
+    function sendAllCoordinates(screen) {
       var startCoordinates = JSON.parse(localStorage.getItem('startCoordinates'));
       var endCoordinates = JSON.parse(localStorage.getItem('endCoordinates'));
 
@@ -61,7 +74,7 @@
       sendCoordinatesToFlask(startCoordinates.latitude, startCoordinates.longitude, endCoordinates.latitude, endCoordinates.longitude);
       
 
-      switchToOtherScreen('navigationtest');
+      switchToOtherScreen(screen);
     }
   </script>
 
@@ -78,13 +91,15 @@
   <div class="viewPort" style="height: 100%; width: 100%;">
     <div class="homeScreen" style="position: absolute; top: 0; left: 0;">
       <img src="/images/home.png">
-      <div id="map_div" style="position: absolute; top: 279px; left: 19px;"></div>
-      <button id='bt1' onclick="switchToOtherScreen('navigatePoitest')" style="position: absolute; width: 336px; height: 44px; top: 114px; left: 38px; opacity: 1;">출발지 입력 </button>
-      <button id='bt2' onclick="switchToOtherScreen('navigatePoitest2')" style="position: absolute; width: 336px; height: 44px; top: 164px; left: 38px; opacity: 1;">도착지 입력</button>
-      <button id='bt3' onclick="switchToOtherScreen('login')" style="position: absolute; left: 306px; top:49px; opacity: 0;">login </button>
-      <button id='bt5' onclick="switchToOtherScreen('menu')" style="position: absolute; width: 30px; height: 30px; top:49px; left: 346px; opacity: 0;">login </button>
-      <button id='bt6' onclick="switchToOtherScreen('cost')" style="position: absolute; width: 164px; height: 44px; top:215px; left: 38px; opacity: 0;">비용아끼기 </button>
-      <button id='bt7' onclick="sendAllCoordinates()" style="position: absolute; width: 164px; height: 44px; top:215px; left: 209px; opacity: 0;">시간아끼기 </button>
+      <div id="map_div" style="position: absolute; top: 270px; left: 19px;"></div>
+      <button id='bt1' onclick="switchToOtherScreen('navigatePoitest')" style="position: absolute; width: 336px; height: 44px; top: 89px; left: 38px; opacity: 1;">출발지 입력 </button>
+      <button id='bt2' onclick="switchToOtherScreen('navigatePoitest2')" style="position: absolute; width: 336px; height: 44px; top: 139px; left: 38px; opacity: 1;">도착지 입력</button>
+      <button id='bt3' onclick="switchToOtherScreen('login')" style="position: absolute; left: 306px; top:17px; opacity: 0;">login </button>
+      <button id='bt5' onclick="switchToOtherScreen('menu')" style="position: absolute; width: 30px; height: 30px; top:17px; left: 346px; opacity: 0;">login </button>
+      <button id='bt6' onclick="switchToOtherScreen('cost')" style="position: absolute; width: 164px; height: 44px; top:215px; left: 30px; opacity: 0;">비용아끼기 </button>
+      <button id='bt7' onclick="sendAllCoordinates('navigationtest')" style="position: absolute; width: 164px; height: 44px; top:215px; left: 200px; opacity: 0;">시간아끼기 </button>
+      <button id='bt8' onclick="switchToOtherScreen('userinfo')" style="position: absolute; left: 266px; top:17px; opacity: 0;">if </button>
+
     </div>
   </div>                                               
 

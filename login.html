@@ -13,7 +13,12 @@
   <div class="viewPort" style=" height: 100%; width: 100%;">
     <div class="loginScreen">
       <img src="/images/login.png" style="width: 393px; height: 800px;">
-      <button id='user' onclick="switchToOtherScreen('user')" style="position: absolute; width: 75px; height: 35px; top:365px; left: 285px; opacity: 1;">여기 </button>
+      <form id="loginForm">
+        <input type="text" id="userId" placeholder="Username" class="form-control" style="position:absolute; top:110px; width: 400px; height: 50px;" required>
+        <input type="password" id="password" placeholder="Password" class="form-control" style="position:absolute; top:180px; width: 400px; height: 50px;" required>
+        <button type="submit" class="btn btn-primary" style="position: absolute; width: 320px; height: 54px; top:295px; left: 38px; background-color: #47AEE9; border-radius: none;">Login</button>
+      </form>
+      <button id='user' onclick="switchToOtherScreen('user')" style="position: absolute; width: 75px; height: 35px; top:365px; left: 285px; opacity: 0;">여기 </button>
       
     
     </div>
@@ -22,6 +27,33 @@
   function switchToOtherScreen(Screen) {
     window.ReactNativeWebView.postMessage(Screen);
   }
+  document.addEventListener("DOMContentLoaded", function() {
+  document.getElementById("loginForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    
+    const id = document.getElementById("userId").value;
+    const pw = document.getElementById("password").value;
+
+    fetch('http://218.149.172.241:7877/signin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, pw}),
+    })
+    .then(response => response.json())
+    .then(response => {
+      if (response.result === "success") {
+        alert(response.message);
+        switchToOtherScreen('navigateHome');
+      }
+      if (response.result === "fail") {
+        alert(response.error);
+      }
+    })
+    .catch(error => console.error("Failed to register: " + error));
+  });
+});
 </script>
 </body>
 </html>
